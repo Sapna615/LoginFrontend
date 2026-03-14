@@ -1,15 +1,15 @@
 import axios from 'axios';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://jsonplaceholder.typicode.com'  // Temporary placeholder API
+  ? null  // Disable API calls in production for now
   : 'http://localhost:5003';
 
-const api = axios.create({
+const api = API_BASE_URL ? axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-});
+}) : null;
 
 // Add token to requests
 api.interceptors.request.use(
