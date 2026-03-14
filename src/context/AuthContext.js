@@ -64,7 +64,11 @@ export const AuthProvider = ({ children }) => {
 
   // Load user
   const loadUser = async () => {
-    if (!api) return; // Skip if no API configured
+    if (!api) {
+      // No API configured - skip authentication check
+      dispatch({ type: AUTH_FAIL });
+      return;
+    }
     
     if (localStorage.token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${localStorage.token}`;
@@ -86,10 +90,7 @@ export const AuthProvider = ({ children }) => {
 
   // Register user
   const register = async (formData) => {
-    if (!api) {
-      alert('Backend not configured. Please configure API URL.');
-      return;
-    }
+    if (!api) return; // Silently fail if no API
     
     try {
       const res = await api.post('/api/auth/register', formData);
@@ -105,10 +106,7 @@ export const AuthProvider = ({ children }) => {
 
   // Login user
   const login = async (formData) => {
-    if (!api) {
-      alert('Backend not configured. Please configure API URL.');
-      return;
-    }
+    if (!api) return; // Silently fail if no API
     
     try {
       const res = await api.post('/api/auth/login', formData);
